@@ -1,5 +1,7 @@
-var startEl = document.querySelector("#start");
-var page = document.querySelector("main");
+var highScoreEl = document.querySelector("#high-score");
+var pageEl = document.querySelector("main");
+var questionNumber = 0;
+
 var questions = [{
     question : "Common data types do not include:",
     answers : ["strings","booleans","alerts","numbers"],
@@ -9,28 +11,65 @@ var questions = [{
     answers : ["Encapsulation","Interface","Composition","Inheritance"],
     correctAnswer : 3
 }]
-
+// for (var i = 0; i < questions.length; i++){
+//     questions.number = 
+// }
 var clearMain = function(){
-    while(page.firstChild){
-        page.removeChild(page.firstChild);
+    while(pageEl.firstChild){
+        pageEl.removeChild(pageEl.firstChild);
     }
 }
-var startQuiz = function(){
+var displayQuestion = function(oneQuestion){
     clearMain();
+    var targetEl = event.target;
+    pageEl.className = "question-layout";
     console.log("started");
     var printedQuestion = document.createElement("h1");
     printedQuestion.className = "question";
-    printedQuestion.textContent = questions[0].question;
-    page.appendChild(printedQuestion);
+    printedQuestion.textContent = oneQuestion.question;
+    pageEl.appendChild(printedQuestion);
 
     
-    for(i=0; i<questions[0].answers.length; i++){
-        console.log(questions[0].answers[i]);
+    for(i=0; i<oneQuestion.answers.length; i++){
         var answerButton = document.createElement("button");
-      answerButton.className = "btn";
-      answerButton.textContent = questions[0].answers[i];
-      page.appendChild(answerButton);
+      answerButton.className = "btn answer";
+      answerButton.textContent = oneQuestion.answers[i];
+      answerButton.setAttribute("data-answer-id",i)
+      pageEl.appendChild(answerButton);
     }
+    questionNumber++;
 }
+
+var clickDecision = function(event){
+    console.log ("button clicked");
+    var targetEl = event.target;
+    if (targetEl.matches("#start")){
+        displayQuestion(questions[questionNumber]);
+    } else {
+        var answerChosen = parseInt(targetEl.getAttribute("data-answer-id"));
+    console.log(answerChosen,questions[questionNumber-1].correctAnswer)
+        if (answerChosen === questions[questionNumber-1].correctAnswer){
+        console.log("correct");
+    }else {
+        console.log("wrong");
+    }
+    if (questionNumber>=questions.length){
+        clearMain();
+        var closingStatement = document.createElement("h1");
+        closingStatement.textContent = "The Quiz is over";
+        pageEl.appendChild(closingStatement);
+    } else if (targetEl.matches(".answer")){
     
-startEl.addEventListener('click',startQuiz);
+    displayQuestion(questions[questionNumber]);
+    }}
+}
+var highScore = function(event){
+    clearMain();
+    var highScoreTitle = document.createElement('h1');
+    highScoreTitle.textContent = "High Scores";
+    pageEl.appendChild(highScoreTitle);
+}
+  
+pageEl.addEventListener('click',clickDecision);
+highScoreEl.addEventListener('click',highScore);
+
