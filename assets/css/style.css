@@ -1,31 +1,31 @@
 header {
-    display: flex;
-    justify-content: space-around;
+  display: flex;
+  justify-content: space-around;
 }
-main {
-    text-align: center;
+.main {
+  text-align: center;
 }
 
-.btn{
-    background-color: aqua;
-    border-radius: 5px;
-    padding: 3px 8px;
-    font-size: 18px;
-    cursor: pointer;
-    display: block;
-    margin: 5px 0;
+.btn {
+  background-color: aqua;
+  border-radius: 5px;
+  padding: 3px 8px;
+  font-size: 18px;
+  cursor: pointer;
+  display: block;
+  margin: 5px 0;
 }
-#start{
-    margin: 5px auto;
+#start {
+  margin: 5px auto;
 }
-.btn:hover{
-    background-color: lightskyblue;
+.btn:hover {
+  background-color: lightskyblue;
 }
-.btn:active{
-    box-shadow: inset 0px 0px 5px #c1c1c1;
-   outline: none;
+.btn:active {
+  box-shadow: inset 0px 0px 5px #c1c1c1;
+  outline: none;
 }
-.question-layout{
-    margin-left: 20%;
-    text-align: left;
+.question-layout {
+  margin-left: 20%;
+  text-align: left;
 }
