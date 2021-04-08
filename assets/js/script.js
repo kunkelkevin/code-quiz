@@ -1,10 +1,12 @@
 var highScoreEl = document.querySelector("#high-score");
 var pageEl = document.querySelector("main");
 var timerEl = document.querySelector("#timer-count");
+var savedHighScores = [];
 var questionNumber = 0;
 var remainingTime = 10;
 var numberCorrect = 0;
 var counter = 0;
+var finalScore = 0;
 
 var questions = [
   {
@@ -22,6 +24,8 @@ var questions = [
 // for (var i = 0; i < questions.length; i++){
 //     questions.number =
 // }
+var sortScores = function () {};
+
 var clearMain = function () {
   while (pageEl.firstChild) {
     pageEl.removeChild(pageEl.firstChild);
@@ -59,11 +63,12 @@ var displayQuestion = function (oneQuestion) {
 
 var endScreen = function () {
   clearInterval(counter);
+  loadScores();
   remainingTime = Math.max(remainingTime, 0);
   console.log(remainingTime);
   timerEl.textContent = remainingTime;
   clearMain();
-  var finalScore = 10 * numberCorrect + remainingTime;
+  finalScore = 10 * numberCorrect + remainingTime;
   var closingTitle = document.createElement("div");
   closingTitle.innerHTML =
     "<h1>Finished</h1><p>Each correct answer was worth 10 points.  You had " +
@@ -73,19 +78,55 @@ var endScreen = function () {
     ".</p><p>Your total score was " +
     finalScore +
     ".</p>";
-  pageEl.appendChild(closingTitle);
+  if (
+    savedHighScores.length >= 5 &&
+    finalScore <= savedHighScores[savedHighScores.length - 1].score
+  ) {
+    closingTitle.innerHTML =
+      closingTitle.innerHTML +
+      "<p> Sorry, you needed a score of over " +
+      savedHighScores[savedHighScores.length - 1].score +
+      " to make it to the highscore list </p>";
+    pageEl.appendChild(closingTitle);
+  } else {
+    closingTitle.innerHTML =
+      closingTitle.innerHTML +
+      "<p> Please enter your initials for the highscore</p>";
+    pageEl.appendChild(closingTitle);
+    var highScoreForm = document.createElement("form");
+    var highScoreInput = document.createElement("div");
+    var highScoreSubmit = document.createElement("div");
+    highScoreInput.innerHTML =
+      "<input type='text' name='initials' maxlength = '3' placeholder='Enter your initials'/>";
+    highScoreForm.appendChild(highScoreInput);
+    highScoreSubmit.innerHTML =
+      "<button class='btn' id='submit-btn' type='submit'>Submit</button>";
+    highScoreForm.appendChild(highScoreSubmit);
+    pageEl.appendChild(highScoreForm);
+  }
   var mainButton = document.createElement("button");
   mainButton.className = "btn main-btn";
   mainButton.textContent = "Restart";
   pageEl.appendChild(mainButton);
 };
+
 var answeredCorrect = function () {
   numberCorrect++;
   console.log(numberCorrect);
 };
+
 var answeredWrong = function () {
   remainingTime -= 10;
 };
+
+var loadScores = function () {
+  var savedScore = localStorage.getItem("scores");
+  if (!savedScore) {
+    return false;
+  }
+  savedHighScores = JSON.parse(savedScore);
+};
+
 var clickDecision = function (event) {
   console.log("button clicked");
   var targetEl = event.target;
@@ -94,7 +135,7 @@ var clickDecision = function (event) {
     countDown();
   } else if (targetEl.matches(".main-btn")) {
     mainScreen();
-  } else {
+  } else if (targetEl.matches(".answer")) {
     var answerChosen = parseInt(targetEl.getAttribute("data-answer-id"));
     console.log(answerChosen, questions[questionNumber - 1].correctAnswer);
     if (answerChosen === questions[questionNumber - 1].correctAnswer) {
@@ -104,17 +145,52 @@ var clickDecision = function (event) {
     }
     if (questionNumber >= questions.length) {
       endScreen(counter);
-    } else if (targetEl.matches(".answer")) {
+    } else {
       displayQuestion(questions[questionNumber]);
     }
+  } else if (targetEl.matches("#submit-btn")) {
+    console.log(document.querySelector("input[name='initials']").value);
+    var highScoreObj = {
+      name: document.querySelector("input[name='initials']").value,
+      score: finalScore,
+    };
+    loadScores();
+    savedHighScores.splice(4, 1, highScoreObj);
+    savedHighScores.sort(function (a, b) {
+      return b.score - a.score;
+    });
+    localStorage.setItem("scores", JSON.stringify(savedHighScores));
+    highScore();
   }
 };
+
 var highScore = function (event) {
   clearMain();
+  loadScores();
+  clearInterval(counter);
+  pageEl.className = "main";
   var highScoreTitle = document.createElement("h1");
   highScoreTitle.textContent = "High Scores";
   pageEl.appendChild(highScoreTitle);
+  for (i = 0; i < savedHighScores.length; i++) {
+    var scoreList = document.createElement("div");
+    var scoreListInitials = document.createElement("p");
+    var scoreListScore = document.createElement("p");
+    scoreList.className = "high-score-list";
+    scoreListInitials.className = "high-score-name";
+    scoreListScore.className = "high-score-score";
+    scoreListInitials.textContent = savedHighScores[i].name;
+    scoreListScore.textContent = savedHighScores[i].score;
+    scoreList.appendChild(scoreListInitials);
+    scoreList.appendChild(scoreListScore);
+    pageEl.appendChild(scoreList);
+  }
+  var mainButton = document.createElement("button");
+  mainButton.className = "btn main-btn";
+  mainButton.textContent = "Return Home";
+  pageEl.appendChild(mainButton);
 };
+
 var countDown = function () {
   counter = setInterval(function () {
     timerEl.textContent = remainingTime;
