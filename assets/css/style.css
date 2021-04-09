@@ -13,7 +13,7 @@ header {
   font-size: 18px;
   cursor: pointer;
   display: block;
-  margin: 5px 0;
+  margin: 5px 20px 5px 0;
 }
 #start {
   margin: 5px auto;
@@ -50,6 +50,16 @@ form input {
   justify-content: space-between;
   margin: 5px auto;
 }
-.main-btn {
-  margin: 5px auto;
+
+.hs-buttons {
+    display: flex;
+    justify-content: center;
+}
+.answer-match {
+    border-top: 1px lightsteelblue solid;
+    width: 80%;
+    color: lightsteelblue;
+    font-size: 26px;
+    margin-top: 16px;
+    padding-top: 12px;
 }
