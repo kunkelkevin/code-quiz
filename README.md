@@ -8,7 +8,7 @@ Once the quiz is completed your score is calculated by adding 10 points for each
 
 Once initials are entered or any time the highscore link is clicked from the header, the highscore screen will appear displaying up to 5 scores and sorted highest to lowest.  Buttons appear at the bottom to either return to the main screen or reset the highscores.
 
-The website is [https://kunkelkevin.github.io/code-quiz/](https://kunkelkevin.github.io/codequiz/)
+The website is [https://kunkelkevin.github.io/code-quiz/](https://kunkelkevin.github.io/code-quiz/)
 
 Screenshot showing the initial/main screen
 ![Main screenshot](/assets/img/screenshot-main.png "Main Screen")
