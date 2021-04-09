@@ -263,7 +263,7 @@ var clickDecision = function (event) {
     highScore();
   } else if (targetEl.matches(".reset")){
       localStorage.clear();
-      savedHighScores = "";
+      savedHighScores = [];
       highScore();
   }
 };
